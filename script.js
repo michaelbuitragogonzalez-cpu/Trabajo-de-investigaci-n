@@ -1,10 +1,18 @@
-
+/* =====================================================
+   LISTA DE DOCUMENTOS  (aquí es donde agregas o cambias archivos)
+   - tipo: "pdf" | "word" | "excel"
+   - archivo: ruta dentro de la carpeta "archivos/"
+   - Si dejas archivo en null, la tarjeta aparece como "Próximamente".
+   ===================================================== */
 const DOCUMENTOS = [
   {
     titulo: "Propuesta de investigación",
-    descripcion: "Planteamiento, objetivos y metodología del trabajo.",
+    descripcion: "Planteamiento, formulación del problema y objetivos del trabajo.",
     tipo: "word",
-    archivo: null            // ← cuando la tengas: "archivos/Propuesta.docx"
+    archivo: "archivos/Propuesta_Investigacion.docx",
+    imagenes: ["archivos/propuesta/pagina-1.jpg", "archivos/propuesta/pagina-2.jpg", "archivos/propuesta/pagina-3.jpg",
+               "archivos/propuesta/pagina-4.jpg", "archivos/propuesta/pagina-5.jpg", "archivos/propuesta/pagina-6.jpg",
+               "archivos/propuesta/pagina-7.jpg"]
   },
   {
     titulo: "Árbol de problemas",
@@ -25,14 +33,16 @@ const DOCUMENTOS = [
     archivo: "archivos/Estado_del_Arte.xlsx"
   },
   {
-    titulo: "Primera Exposición",
-    descripcion: "Expsocion de los avances del proyecto ante el docente y compañeros.",
-    tipo: "Power Point",
-    archivo: "archivos/Primera Diapositiva.pptx"            // ← cuando la tengas: "archivos/Informe_Final.docx"
+    titulo: "Temas de investigación",
+    descripcion: "Presentación con los temas que nos interesaban y el tema elegido.",
+    tipo: "ppt",
+    archivo: "archivos/Primera_Diapositiva.pptx",
+    imagenes: ["archivos/diapositivas/diapositiva-1.jpg", "archivos/diapositivas/diapositiva-2.jpg", "archivos/diapositivas/diapositiva-3.jpg",
+               "archivos/diapositivas/diapositiva-4.jpg", "archivos/diapositivas/diapositiva-5.jpg", "archivos/diapositivas/diapositiva-6.jpg"]
   }
 ];
 
-const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel", powerpoint: "Power Point" };
+const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel", ppt: "PowerPoint" };
 
 /* ---------- Tarjetas ---------- */
 const contenedor = document.getElementById("cajones");
@@ -102,7 +112,9 @@ function abrirVisor(doc) {
   visor.setAttribute("aria-hidden", "false");
   document.body.classList.add("sin-scroll");
 
-  if (doc.tipo === "pdf") mostrarPdf(doc.archivo);
+  if (doc.tipo === "ppt") mostrarDiapositivas(doc.imagenes);
+  else if (doc.imagenes) mostrarPaginas(doc.imagenes, doc.titulo);
+  else if (doc.tipo === "pdf") mostrarPdf(doc.archivo);
   else if (doc.tipo === "word") mostrarWord(doc.archivo);
   else mostrarExcel();
 }
@@ -111,6 +123,7 @@ function cerrarVisor() {
   visor.classList.remove("abierto");
   visor.setAttribute("aria-hidden", "true");
   document.body.classList.remove("sin-scroll");
+  manejarTeclas = null;
   setTimeout(() => (cuerpo.innerHTML = ""), 400);
   if (ultimoBoton) ultimoBoton.focus();
 }
@@ -121,6 +134,65 @@ function mostrarError(mensaje) {
 
 const MENSAJE_SERVIDOR =
   "No se pudo abrir el archivo. Abre el proyecto con Live Server en VS Code (clic derecho en index.html → Open with Live Server) o usa el botón Descargar.";
+
+/* Word: se muestra como páginas (imágenes incluidas en la carpeta), así se ve siempre */
+function mostrarPaginas(imagenes, titulo) {
+  cuerpo.innerHTML = `<div class="pdf-paginas">${imagenes.map((src, i) =>
+    `<img class="pagina-doc" src="${src}" alt="${escapar(titulo)}, página ${i + 1} de ${imagenes.length}" loading="lazy">`
+  ).join("")}</div>`;
+}
+
+/* PowerPoint: una diapositiva a la vez, con flechas, teclado y deslizar con el dedo */
+function mostrarDiapositivas(imagenes) {
+  let actual = 0;
+  cuerpo.innerHTML = `
+    <div class="presentacion">
+      <div class="escenario" id="escenario">
+        ${imagenes.map((src, i) =>
+          `<img class="diapo" src="${src}" alt="Diapositiva ${i + 1} de ${imagenes.length}">`).join("")}
+      </div>
+      <div class="controles">
+        <button class="excel-flecha" id="diapo-ant" aria-label="Diapositiva anterior">&#9664;</button>
+        <span class="contador" id="diapo-contador" aria-live="polite"></span>
+        <button class="excel-flecha" id="diapo-sig" aria-label="Diapositiva siguiente">&#9654;</button>
+      </div>
+    </div>`;
+
+  const diapos = cuerpo.querySelectorAll(".diapo");
+  const contador = document.getElementById("diapo-contador");
+  const ant = document.getElementById("diapo-ant");
+  const sig = document.getElementById("diapo-sig");
+
+  function ir(n) {
+    actual = Math.max(0, Math.min(imagenes.length - 1, n));
+    diapos.forEach((d, i) => d.classList.toggle("activa", i === actual));
+    contador.textContent = `${actual + 1} de ${imagenes.length}`;
+    ant.disabled = actual === 0;
+    sig.disabled = actual === imagenes.length - 1;
+  }
+  ant.addEventListener("click", () => ir(actual - 1));
+  sig.addEventListener("click", () => ir(actual + 1));
+  manejarTeclas = (e) => {
+    if (e.key === "ArrowLeft") ir(actual - 1);
+    if (e.key === "ArrowRight") ir(actual + 1);
+  };
+
+  let x0 = null;
+  const escenario = document.getElementById("escenario");
+  escenario.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  escenario.addEventListener("touchend", (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) ir(actual + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+  ir(0);
+}
+
+let manejarTeclas = null;
+document.addEventListener("keydown", (e) => {
+  if (manejarTeclas && visor.classList.contains("abierto")) manejarTeclas(e);
+});
 
 /* PDF: se dibuja con PDF.js para que funcione también en celulares.
    Si algo falla, se usa el visor del propio navegador como respaldo. */
