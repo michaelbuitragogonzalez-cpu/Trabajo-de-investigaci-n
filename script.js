@@ -1,9 +1,4 @@
-/* =====================================================
-   LISTA DE DOCUMENTOS  (aquí es donde agregas o cambias archivos)
-   - tipo: "pdf" | "word" | "excel"
-   - archivo: ruta dentro de la carpeta "archivos/"
-   - Si dejas archivo en null, la tarjeta aparece como "Próximamente".
-   ===================================================== */
+
 const DOCUMENTOS = [
   {
     titulo: "Propuesta de investigación",
