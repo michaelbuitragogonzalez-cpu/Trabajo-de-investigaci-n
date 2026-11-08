@@ -109,7 +109,7 @@ function abrirVisor(doc) {
 
   if (doc.tipo === "pdf") mostrarPdf(doc.archivo);
   else if (doc.tipo === "word") mostrarWord(doc.archivo);
-  else mostrarExcel(doc.archivo);
+  else mostrarExcel();
 }
 
 function cerrarVisor() {
@@ -171,18 +171,33 @@ async function mostrarWord(ruta) {
   }
 }
 
-/* Excel: se muestra cada hoja como tabla con SheetJS */
-async function mostrarExcel(ruta) {
-  try {
-    await cargarScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js");
-    const datos = await (await fetch(ruta)).arrayBuffer();
-    const libro = XLSX.read(datos, { type: "array" });
-    cuerpo.innerHTML = `<div class="tabla-excel">${libro.SheetNames.map((nombre) =>
-      `<h4>${nombre}</h4><div class="scroll">${XLSX.utils.sheet_to_html(libro.Sheets[nombre])}</div>`
-    ).join("")}</div>`;
-  } catch (err) {
-    mostrarError(MENSAJE_SERVIDOR);
-  }
+/* Excel: se dibuja desde los datos incrustados (estado_del_arte_datos.js),
+   así se ve siempre, sin servidor ni internet. */
+function escapar(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function mostrarExcel() {
+  const datos = window.ESTADO_ARTE;
+  if (!datos) { mostrarError("No se encontraron los datos del Estado del arte."); return; }
+
+  const celda = (c) => {
+    if (c && typeof c === "object") {
+      return `<a href="${escapar(c.l)}" target="_blank" rel="noopener">${escapar(c.t.length > 38 ? "Abrir artículo" : c.t)}</a>`;
+    }
+    return escapar(c);
+  };
+
+  const cabecera = datos.headers.map((h) => `<th>${escapar(h)}</th>`).join("");
+  const filas = datos.rows.map((fila) =>
+    `<tr>${fila.map((c, i) => `<td data-etiqueta="${escapar(datos.headers[i])}">${celda(c)}</td>`).join("")}</tr>`
+  ).join("");
+
+  cuerpo.innerHTML = `
+    <div class="tabla-excel">
+      <p class="excel-nota">${datos.rows.length} fuentes revisadas. Desliza para ver todas las columnas.</p>
+      <div class="scroll"><table><thead><tr>${cabecera}</tr></thead><tbody>${filas}</tbody></table></div>
+    </div>`;
 }
 
 const scriptsCargados = {};

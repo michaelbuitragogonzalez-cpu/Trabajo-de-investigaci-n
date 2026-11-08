@@ -317,14 +317,25 @@ footer {
 .word-contenido td, .word-contenido th { border: 1px solid var(--linea); padding: .4rem .6rem; }
 
 .tabla-excel { padding: 1rem; }
-.tabla-excel h4 { font-family: var(--titulos); margin: 1rem 0 .5rem; color: var(--tinta); }
-.tabla-excel .scroll { overflow: auto; background: var(--blanco); border-radius: .6rem; }
-.tabla-excel td, .tabla-excel th {
-  border: 1px solid var(--linea);
-  padding: .4rem .7rem;
-  font-size: .9rem;
-  vertical-align: top;
+.excel-nota { color: var(--suave); font-size: .95rem; margin-bottom: .75rem; }
+.tabla-excel .scroll { overflow: auto; background: var(--blanco); border-radius: .6rem; max-height: calc(100% - 3rem); }
+.tabla-excel table { border-collapse: separate; border-spacing: 0; min-width: 95rem; width: 100%; }
+.tabla-excel th {
+  position: sticky; top: 0;
+  background: var(--tinta); color: var(--blanco);
+  text-align: left; font-family: var(--titulos); font-size: .9rem;
+  padding: .7rem .8rem;
 }
+.tabla-excel td {
+  border-bottom: 1px solid var(--linea);
+  padding: .75rem .8rem;
+  font-size: .9rem; line-height: 1.5;
+  vertical-align: top;
+  min-width: 9rem;
+}
+.tabla-excel td:nth-child(2) { min-width: 22rem; }
+.tabla-excel tbody tr:nth-child(even) td { background: #f7fafa; }
+.tabla-excel a { color: var(--word); font-weight: 600; }
 
 /* ---------- PDF (páginas dibujadas) ---------- */
 .pdf-paginas { display: grid; gap: .75rem; padding: .75rem; justify-items: center; }
@@ -380,7 +391,23 @@ footer {
   .btn-cerrar { width: 2.75rem; height: 2.75rem; flex-shrink: 0; }
 
   .word-contenido { margin: .5rem; padding: 1.25rem; }
-  .tabla-excel { padding: .5rem; }
+  .tabla-excel { padding: .75rem; }
+  .excel-nota { display: none; }
+  .tabla-excel .scroll { background: transparent; max-height: none; overflow: visible; }
+  .tabla-excel table, .tabla-excel tbody, .tabla-excel tr, .tabla-excel td { display: block; min-width: 0; width: 100%; }
+  .tabla-excel thead { display: none; }
+  .tabla-excel tr {
+    background: var(--blanco); border: 1px solid var(--linea);
+    border-radius: 1rem; padding: .5rem 1rem; margin-bottom: .9rem;
+  }
+  .tabla-excel tbody tr:nth-child(even) td { background: transparent; }
+  .tabla-excel td, .tabla-excel td:nth-child(2) { min-width: 0; border: 0; padding: .55rem 0; border-bottom: 1px solid var(--linea); }
+  .tabla-excel td:last-child { border-bottom: 0; }
+  .tabla-excel td::before {
+    content: attr(data-etiqueta);
+    display: block; font-family: var(--titulos); font-weight: 700;
+    font-size: .8rem; color: var(--suave); margin-bottom: .15rem;
+  }
 }
 
 @media (max-height: 520px) and (orientation: landscape) {
