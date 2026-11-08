@@ -6,13 +6,12 @@
    ===================================================== */
 const DOCUMENTOS = [
   {
-    titulo: "Propuesta de investigación",
-    descripcion: "Planteamiento, formulación del problema y objetivos del trabajo.",
+    titulo: "Problema y pregunta de investigación",
+    descripcion: "Descripción del problema, su diagnóstico y la pregunta que guía el trabajo.",
     tipo: "word",
-    archivo: "archivos/Propuesta_Investigacion.docx",
-    imagenes: ["archivos/propuesta/pagina-1.jpg", "archivos/propuesta/pagina-2.jpg", "archivos/propuesta/pagina-3.jpg",
-               "archivos/propuesta/pagina-4.jpg", "archivos/propuesta/pagina-5.jpg", "archivos/propuesta/pagina-6.jpg",
-               "archivos/propuesta/pagina-7.jpg"]
+    archivo: "archivos/Problema.docx",
+    imagenes: ["archivos/problema/pagina-1.jpg", "archivos/problema/pagina-2.jpg",
+               "archivos/problema/pagina-3.jpg", "archivos/problema/pagina-4.jpg"]
   },
   {
     titulo: "Árbol de problemas",
