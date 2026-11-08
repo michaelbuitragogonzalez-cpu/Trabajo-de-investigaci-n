@@ -29,12 +29,6 @@ const DOCUMENTOS = [
     tipo: "excel",
     archivo: "archivos/Estado_del_Arte.xlsx"
   },
-  {
-    titulo: "Documento por agregar",
-    descripcion: "Espacio reservado para el cuarto archivo.",
-    tipo: "word",
-    archivo: null            // ← cuando lo tengas: "archivos/NombreDelArchivo.docx"
-  }
 ];
 
 const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel" };
