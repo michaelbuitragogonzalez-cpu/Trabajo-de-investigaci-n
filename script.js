@@ -195,9 +195,39 @@ function mostrarExcel() {
 
   cuerpo.innerHTML = `
     <div class="tabla-excel">
-      <p class="excel-nota">${datos.rows.length} fuentes revisadas. Desliza para ver todas las columnas.</p>
-      <div class="scroll"><table><thead><tr>${cabecera}</tr></thead><tbody>${filas}</tbody></table></div>
+      <div class="excel-barra">
+        <p class="excel-nota">${datos.rows.length} fuentes revisadas. Usa las flechas o arrastra la tabla para ver todas las columnas.</p>
+        <button class="excel-flecha" data-lado="-1" aria-label="Columnas anteriores">&#9664;</button>
+        <button class="excel-flecha" data-lado="1" aria-label="Más columnas">&#9654;</button>
+      </div>
+      <div class="scroll" id="excel-scroll"><table><thead><tr>${cabecera}</tr></thead><tbody>${filas}</tbody></table></div>
     </div>`;
+
+  activarDeslizado(document.getElementById("excel-scroll"));
+}
+
+/* Flechas y arrastre con el mouse para mover la tabla de lado */
+function activarDeslizado(zona) {
+  document.querySelectorAll(".excel-flecha").forEach((b) =>
+    b.addEventListener("click", () =>
+      zona.scrollBy({ left: b.dataset.lado * zona.clientWidth * 0.7 }))
+  );
+
+  let activo = false, inicioX = 0, inicioY = 0, izq = 0, arriba = 0;
+  zona.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse" || e.target.closest("a")) return;
+    activo = true; inicioX = e.clientX; inicioY = e.clientY;
+    izq = zona.scrollLeft; arriba = zona.scrollTop;
+    zona.classList.add("arrastrando");
+  });
+  window.addEventListener("pointermove", (e) => {
+    if (!activo) return;
+    zona.scrollLeft = izq - (e.clientX - inicioX);
+    zona.scrollTop = arriba - (e.clientY - inicioY);
+  });
+  window.addEventListener("pointerup", () => {
+    activo = false; zona.classList.remove("arrastrando");
+  });
 }
 
 const scriptsCargados = {};
