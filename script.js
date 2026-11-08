@@ -29,6 +29,12 @@ const DOCUMENTOS = [
     tipo: "excel",
     archivo: "archivos/Estado_del_Arte.xlsx"
   },
+  {
+    titulo: "Documento por agregar",
+    descripcion: "Espacio reservado para el cuarto archivo.",
+    tipo: "word",
+    archivo: null            // ← cuando lo tengas: "archivos/NombreDelArchivo.docx"
+  }
 ];
 
 const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel" };
@@ -121,9 +127,36 @@ function mostrarError(mensaje) {
 const MENSAJE_SERVIDOR =
   "No se pudo abrir el archivo. Abre el proyecto con Live Server en VS Code (clic derecho en index.html → Open with Live Server) o usa el botón Descargar.";
 
-/* PDF: lo muestra el visor del propio navegador */
-function mostrarPdf(ruta) {
-  cuerpo.innerHTML = `<iframe src="${ruta}" title="Documento PDF"></iframe>`;
+/* PDF: se dibuja con PDF.js para que funcione también en celulares.
+   Si algo falla, se usa el visor del propio navegador como respaldo. */
+async function mostrarPdf(ruta) {
+  try {
+    await cargarScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const pdf = await pdfjsLib.getDocument(ruta).promise;
+    const paginas = document.createElement("div");
+    paginas.className = "pdf-paginas";
+    cuerpo.innerHTML = "";
+    cuerpo.appendChild(paginas);
+
+    const ancho = Math.min(cuerpo.clientWidth - 24, 960);
+    const nitidez = Math.min(window.devicePixelRatio || 1, 2);
+
+    for (let n = 1; n <= pdf.numPages; n++) {
+      if (!visor.classList.contains("abierto")) return;   // se cerró mientras cargaba
+      const pagina = await pdf.getPage(n);
+      const base = pagina.getViewport({ scale: 1 });
+      const vista = pagina.getViewport({ scale: (ancho / base.width) * nitidez });
+      const lienzo = document.createElement("canvas");
+      lienzo.width = vista.width;
+      lienzo.height = vista.height;
+      paginas.appendChild(lienzo);
+      await pagina.render({ canvasContext: lienzo.getContext("2d"), viewport: vista }).promise;
+    }
+  } catch (err) {
+    cuerpo.innerHTML = `<iframe src="${ruta}" title="Documento PDF"></iframe>`;
+  }
 }
 
 /* Word: se convierte a HTML con la librería Mammoth */

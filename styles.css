@@ -32,7 +32,8 @@ body.sin-scroll { overflow: hidden; }
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   align-items: center;
   padding: 4rem clamp(1.5rem, 8vw, 7rem);
@@ -140,7 +141,7 @@ h2 {
 
 .cajones {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
   gap: 1.5rem;
 }
 
@@ -205,6 +206,10 @@ h2 {
   font-weight: 600;
   font-size: .95rem;
   padding: .6rem 1.2rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: .7rem;
   border: 2px solid var(--tinta);
   background: var(--tinta);
@@ -321,11 +326,72 @@ footer {
   vertical-align: top;
 }
 
+/* ---------- PDF (páginas dibujadas) ---------- */
+.pdf-paginas { display: grid; gap: .75rem; padding: .75rem; justify-items: center; }
+.pdf-paginas canvas {
+  width: 100%;
+  max-width: 60rem;
+  height: auto;
+  background: var(--blanco);
+  border-radius: .35rem;
+  box-shadow: 0 6px 20px -10px rgba(13, 43, 51, .4);
+}
+
 /* ---------- Responsive y accesibilidad ---------- */
 @media (max-width: 720px) {
-  .senal { opacity: .35; right: -30%; width: 90vw; }
+  body { font-size: 1rem; }
+
+  .hero {
+    align-items: end;
+    padding: 3rem 1.5rem 6rem;
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+  .senal {
+    top: 22%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    width: min(80vw, 22rem);
+    opacity: .9;
+  }
+  .proyecto { font-size: 1rem; }
+  h1 { font-size: clamp(2.4rem, 13vw, 3.4rem); margin-bottom: 1.5rem; }
+  .autores { font-size: 1.1rem; }
+
+  .documentos { padding: 3rem 1.25rem 4rem; }
+  .intro { margin-bottom: 1.75rem; }
+  .cajon { padding: 1.25rem; }
+  .cajon.visible:hover { transform: none; box-shadow: none; }
+  .acciones .btn { flex: 1 1 8rem; }
+
   .visor { padding: 0; }
-  .visor-panel { height: 100%; border-radius: 0; }
+  .visor-panel {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .visor-barra {
+    padding: .7rem .8rem;
+    padding-top: calc(.7rem + env(safe-area-inset-top));
+    gap: .6rem;
+  }
+  .visor-barra h3 { font-size: 1rem; line-height: 1.2; }
+  .visor-barra .btn { padding: .45rem .8rem; font-size: .85rem; min-height: 2.5rem; }
+  .btn-cerrar { width: 2.75rem; height: 2.75rem; flex-shrink: 0; }
+
+  .word-contenido { margin: .5rem; padding: 1.25rem; }
+  .tabla-excel { padding: .5rem; }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero { min-height: auto; padding: 2.5rem 1.5rem 4rem; }
+  .bajar { display: none; }
+}
+
+@media (hover: none) {
+  .cajon.visible:hover { transform: none; box-shadow: none; }
+  .cajon:hover::before { transform: scaleX(0); }
+  .cajon::before { transform: scaleX(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
