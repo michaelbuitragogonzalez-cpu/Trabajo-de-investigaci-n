@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trabajo de investigación</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="hero">
+    <svg class="senal" viewBox="0 0 400 400" aria-hidden="true">
+      <path class="arco a4" d="M40 150 Q200 10 360 150"/>
+      <path class="arco a3" d="M80 195 Q200 85 320 195"/>
+      <path class="arco a2" d="M120 240 Q200 160 280 240"/>
+      <circle class="punto" cx="200" cy="290" r="14"/>
+    </svg>
+
+    <div class="hero-texto">
+      <p class="proyecto">Seguridad en redes Wi-Fi y protección de la información</p>
+      <h1>Trabajo de investigación</h1>
+      <ul class="autores">
+        <li>Michael Buitrago González</li>
+        <li>Andrés Felipe Chica</li>
+      </ul>
+    </div>
+
+    <a class="bajar" href="#documentos" aria-label="Ir a los documentos">
+      <span></span>
+    </a>
+  </header>
+
+  <main id="documentos" class="documentos">
+    <h2>Documentos del proyecto</h2>
+    <p class="intro">Abre cada documento aquí mismo o descárgalo.</p>
+    <div class="cajones" id="cajones"></div>
+  </main>
+
+  <footer>
+    <p>Trabajo de investigación · Michael Buitrago González y Andrés Felipe Chica</p>
+  </footer>
+
+  <!-- Visor -->
+  <div class="visor" id="visor" aria-hidden="true">
+    <div class="visor-fondo" data-cerrar></div>
+    <section class="visor-panel" role="dialog" aria-modal="true" aria-labelledby="visor-titulo">
+      <div class="visor-barra">
+        <h3 id="visor-titulo"></h3>
+        <a class="btn btn-claro" id="visor-descarga" download>Descargar</a>
+        <button class="btn-cerrar" data-cerrar aria-label="Cerrar visor">&times;</button>
+      </div>
+      <div class="visor-cuerpo" id="visor-cuerpo"></div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
