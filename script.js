@@ -24,9 +24,15 @@ const DOCUMENTOS = [
     tipo: "excel",
     archivo: "archivos/Estado_del_Arte.xlsx"
   },
+  {
+    titulo: "Primera Exposición",
+    descripcion: "Expsocion de los avances del proyecto ante el docente y compañeros.",
+    tipo: "Power Point",
+    archivo: "archivos/Primera Diapositiva.pptx"            // ← cuando la tengas: "archivos/Informe_Final.docx"
+  }
 ];
 
-const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel" };
+const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel", powerpoint: "Power Point" };
 
 /* ---------- Tarjetas ---------- */
 const contenedor = document.getElementById("cajones");
