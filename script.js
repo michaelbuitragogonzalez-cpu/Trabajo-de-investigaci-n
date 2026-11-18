@@ -38,6 +38,12 @@ const DOCUMENTOS = [
     archivo: "archivos/Primera_Diapositiva.pptx",
     imagenes: ["archivos/diapositivas/diapositiva-1.jpg", "archivos/diapositivas/diapositiva-2.jpg", "archivos/diapositivas/diapositiva-3.jpg",
                "archivos/diapositivas/diapositiva-4.jpg", "archivos/diapositivas/diapositiva-5.jpg", "archivos/diapositivas/diapositiva-6.jpg"]
+  },
+    {
+    titulo: "Propuesta de Investigación",
+    descripcion: "Presentación con la propuesta de investigación y los objetivos planteados.",
+    tipo: "word",
+    archivo: "archivos/Propuesta_de_Investigacion.docx",
   }
 ];
 
