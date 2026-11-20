@@ -42,10 +42,13 @@ const DOCUMENTOS = [
     {
     titulo: "Propuesta de Investigación",
     descripcion: "Presentación con la propuesta de investigación y los objetivos planteados.",
-    tipo: "word",
-    archivo: "archivos/Propuesta_de_Investigacion.docx",
+    tipo: "pdf",
+    archivo: "archivos/Propuesta_de_Investigacion.pdf",
   }
 ];
+//ARCHIVOS PPT Y  WORD estos archivos se mostraran solo con imagenss, no son ideeales de mostrar 
+//como archivo como tal, se realizo tambien el camcio del estado del arte para que se mostrar de 
+//manera conciza y abierta al publico
 
 const NOMBRE_TIPO = { pdf: "PDF", word: "Word", excel: "Excel", ppt: "PowerPoint" };
 
